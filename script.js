@@ -1,172 +1,176 @@
-// ==========================================
+// ======================================================
 // NATY DOCE — SCRIPT PRINCIPAL
-// ==========================================
+// VERSÃO PROFISSIONAL
+// ======================================================
 
-// ==========================================
-// 1. CONFIGURAÇÕES
-// ==========================================
 
-// Coloque aqui o número do WhatsApp da Naty Doce.
+// ======================================================
+// 1. CONFIGURAÇÕES GERAIS
+// ======================================================
+
+// WhatsApp da Naty Doce
+// Formato: 55 + DDD + número
 // Exemplo: 5531999999999
 const WHATSAPP = "5500000000000";
 
 
-// ==========================================
-// 2. CONFIGURAÇÃO DO VÍDEO
-// ==========================================
+// ======================================================
+// 2. SUPABASE
+// ======================================================
+//
+// Depois vamos colocar aqui os dados do seu projeto.
+//
+// URL:
+// https://xxxxxxxxxxxx.supabase.co
+//
+// ANON KEY:
+// eyJhbGciOiJIUzI1NiIs...
+//
+// IMPORTANTE:
+// Use somente a chave ANON/PUBLIC.
+// NUNCA coloque a SERVICE_ROLE KEY no site.
+//
+
+const SUPABASE_URL = "COLE_AQUI_SUA_URL_SUPABASE";
+
+const SUPABASE_ANON_KEY =
+  "COLE_AQUI_SUA_CHAVE_ANON_SUPABASE";
+
+
+// ======================================================
+// 3. CONFIGURAÇÃO DO VÍDEO
+// ======================================================
 
 const VIDEO_CONFIG = {
+
   enabled: true,
 
-  // Use:
-  // "youtube" para YouTube
-  // "mp4" para vídeo direto .mp4
+  // youtube ou mp4
   type: "youtube",
 
-  // COLE AQUI O LINK DO SEU VÍDEO
+  // Cole aqui o link do vídeo
   url: "https://www.youtube.com/watch?v=SEU_VIDEO_AQUI",
 
-  title: "Conheça nossas delícias",
+  title: "Conheça a Naty Doce",
 
   description:
-    "Assista ao nosso vídeo e conheça os produtos da Naty Doce."
+    "Conheça nossos bolos de pote e veja nossas delícias."
 };
 
 
-// ==========================================
-// 3. PRODUTOS
-// ==========================================
+// ======================================================
+// 4. PRODUTOS
+// ======================================================
 
 const PRODUCTS = [
+
   {
     id: 1,
+
     name: "Brigadeiro Cremoso",
-    description: "Muito chocolate, cremosidade e sabor irresistível.",
+
+    description:
+      "Chocolate cremoso, intenso e muito recheado.",
+
     price: 10.00,
-    emoji: "🍫"
+
+    emoji: "🍫",
+
+    highlight: true
   },
+
 
   {
     id: 2,
+
     name: "Ninho com Morango",
-    description: "Creme de Ninho com morangos e muito recheio.",
+
+    description:
+      "Creme de Ninho com morangos e muito recheio.",
+
     price: 12.00,
-    emoji: "🍓"
+
+    emoji: "🍓",
+
+    highlight: true
   },
+
 
   {
     id: 3,
+
     name: "Prestígio",
-    description: "Chocolate cremoso com coco em uma combinação deliciosa.",
+
+    description:
+      "Chocolate cremoso combinado com coco.",
+
     price: 10.00,
-    emoji: "🥥"
+
+    emoji: "🥥",
+
+    highlight: false
   },
+
 
   {
     id: 4,
+
     name: "Doce de Leite",
-    description: "Doce de leite cremoso para quem ama um sabor clássico.",
+
+    description:
+      "Doce de leite cremoso com sabor irresistível.",
+
     price: 11.00,
-    emoji: "🍯"
+
+    emoji: "🍯",
+
+    highlight: false
   },
+
 
   {
     id: 5,
+
     name: "Chocolate com Morango",
-    description: "Chocolate cremoso combinado com morangos fresquinhos.",
+
+    description:
+      "Chocolate cremoso com pedaços de morango.",
+
     price: 12.00,
-    emoji: "🍫"
+
+    emoji: "🍫",
+
+    highlight: true
   },
+
 
   {
     id: 6,
+
     name: "Ninho com Nutella",
-    description: "Creme de Ninho com Nutella e muito recheio.",
+
+    description:
+      "Creme de Ninho com Nutella e muito recheio.",
+
     price: 13.00,
-    emoji: "🤍"
+
+    emoji: "🤍",
+
+    highlight: true
   }
+
 ];
 
 
-// ==========================================
-// 4. AVALIAÇÕES INICIAIS
-// ==========================================
-
-const DEFAULT_REVIEWS = [
-  {
-    id: 1,
-    name: "Mariana",
-    stars: 5,
-    text: "Muito gostoso e bem recheado. Amei!"
-  },
-
-  {
-    id: 2,
-    name: "Juliana",
-    stars: 5,
-    text: "Chegou tudo certinho e estava uma delícia."
-  },
-
-  {
-    id: 3,
-    name: "Camila",
-    stars: 5,
-    text: "Muito caprichado. Com certeza vou pedir novamente."
-  }
-];
-
-
-// ==========================================
-// 5. VARIÁVEIS
-// ==========================================
-
-let cart = JSON.parse(
-  localStorage.getItem("natyDoceCart") || "[]"
-);
-
-let reviews = JSON.parse(
-  localStorage.getItem("natyDoceReviews") || "null"
-);
-
-if (!reviews) {
-  reviews = DEFAULT_REVIEWS;
-  saveReviews();
-}
-
-
-// ==========================================
-// 6. ELEMENTOS DA PÁGINA
-// ==========================================
+// ======================================================
+// 5. ELEMENTOS DO HTML
+// ======================================================
 
 const productsContainer =
   document.getElementById("products");
 
 const reviewsContainer =
   document.getElementById("reviews");
-
-const cartElement =
-  document.getElementById("cart");
-
-const overlay =
-  document.getElementById("overlay");
-
-const cartItemsElement =
-  document.getElementById("cartItems");
-
-const cartTotalElement =
-  document.getElementById("cartTotal");
-
-const cartCountElement =
-  document.getElementById("cartCount");
-
-const openCartButton =
-  document.getElementById("openCart");
-
-const closeCartButton =
-  document.getElementById("closeCart");
-
-const checkoutButton =
-  document.getElementById("checkout");
 
 const reviewButton =
   document.getElementById("reviewButton");
@@ -186,432 +190,287 @@ const ctaWhatsApp =
 const yearElement =
   document.getElementById("year");
 
+const videoContainer =
+  document.getElementById("advertisementVideo");
 
-// ==========================================
-// 7. FUNÇÕES AUXILIARES
-// ==========================================
+
+// ======================================================
+// 6. SUPABASE CLIENTE
+// ======================================================
+
+let supabaseClient = null;
+
+
+// Carrega a biblioteca do Supabase automaticamente
+function loadSupabase() {
+
+  return new Promise((resolve, reject) => {
+
+    if (
+      SUPABASE_URL.startsWith("https://") &&
+      SUPABASE_ANON_KEY.length > 20 &&
+      !SUPABASE_URL.includes("COLE_AQUI") &&
+      !SUPABASE_ANON_KEY.includes("COLE_AQUI")
+    ) {
+
+      if (window.supabase) {
+
+        supabaseClient =
+          window.supabase.createClient(
+            SUPABASE_URL,
+            SUPABASE_ANON_KEY
+          );
+
+        resolve();
+
+        return;
+      }
+
+    }
+
+
+    const script =
+      document.createElement("script");
+
+    script.src =
+      "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2";
+
+    script.onload = () => {
+
+      if (
+        SUPABASE_URL.includes("COLE_AQUI") ||
+        SUPABASE_ANON_KEY.includes("COLE_AQUI")
+      ) {
+
+        console.warn(
+          "Supabase ainda não configurado."
+        );
+
+        resolve();
+
+        return;
+      }
+
+
+      try {
+
+        supabaseClient =
+          window.supabase.createClient(
+            SUPABASE_URL,
+            SUPABASE_ANON_KEY
+          );
+
+        resolve();
+
+      } catch (error) {
+
+        console.error(
+          "Erro ao inicializar Supabase:",
+          error
+        );
+
+        reject(error);
+
+      }
+
+    };
+
+
+    script.onerror = () => {
+
+      console.error(
+        "Não foi possível carregar o Supabase."
+      );
+
+      reject(
+        new Error("Supabase não carregado.")
+      );
+
+    };
+
+
+    document.head.appendChild(script);
+
+  });
+
+}
+
+
+// ======================================================
+// 7. FORMATAÇÃO DE PREÇO
+// ======================================================
 
 function formatMoney(value) {
-  return value.toLocaleString("pt-BR", {
-    style: "currency",
-    currency: "BRL"
-  });
+
+  return Number(value).toLocaleString(
+    "pt-BR",
+    {
+      style: "currency",
+      currency: "BRL"
+    }
+  );
+
 }
 
+
+// ======================================================
+// 8. PROTEÇÃO HTML
+// ======================================================
 
 function escapeHTML(text) {
+
   return String(text)
+
     .replaceAll("&", "&amp;")
+
     .replaceAll("<", "&lt;")
+
     .replaceAll(">", "&gt;")
+
     .replaceAll('"', "&quot;")
+
     .replaceAll("'", "&#039;");
+
 }
 
 
-function createWhatsAppLink(message) {
-  return `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(message)}`;
+// ======================================================
+// 9. LINK DO WHATSAPP
+// ======================================================
+
+function whatsappLink(message) {
+
+  return (
+    "https://wa.me/" +
+    WHATSAPP +
+    "?text=" +
+    encodeURIComponent(message)
+  );
+
 }
 
 
-// ==========================================
-// 8. PRODUTOS
-// ==========================================
+// ======================================================
+// 10. PRODUTOS
+// ======================================================
 
 function renderProducts() {
 
   if (!productsContainer) return;
 
-  productsContainer.innerHTML = PRODUCTS.map(product => {
 
-    return `
-      <article class="product">
+  productsContainer.innerHTML =
+    PRODUCTS.map(product => {
 
-        <div class="product-img">
+      const badge =
+        product.highlight
+          ? `<span class="product-badge">Mais pedido</span>`
+          : "";
 
-          <div class="mini-jar">
 
-            <div class="mini-lid">
-              NATY DOCE
-            </div>
+      return `
 
-            <div class="mini-cake">
-              <span></span>
-              <span></span>
-              <span></span>
-            </div>
+        <article class="product">
 
-            <div class="mini-label">
-              ${product.emoji}
-              <strong>Naty Doce</strong>
-            </div>
+          <div class="product-img">
 
-          </div>
+            ${badge}
 
-        </div>
+            <div class="mini-jar">
 
-        <div class="product-body">
+              <div class="mini-lid">
+                NATY DOCE
+              </div>
 
-          <h3>
-            ${escapeHTML(product.name)}
-          </h3>
+              <div class="mini-cake">
 
-          <p>
-            ${escapeHTML(product.description)}
-          </p>
+                <span></span>
+                <span></span>
+                <span></span>
 
-          <div class="product-footer">
+              </div>
 
-            <strong class="price">
-              ${formatMoney(product.price)}
-            </strong>
+              <div class="mini-label">
 
-            <button
-              class="btn small primary"
-              onclick="addToCart(${product.id})"
-            >
-              + Adicionar
-            </button>
+                <span>
+                  ${product.emoji}
+                </span>
 
-          </div>
+                <strong>
+                  Naty Doce
+                </strong>
 
-        </div>
-
-      </article>
-    `;
-
-  }).join("");
-}
-
-
-// ==========================================
-// 9. ADICIONAR AO CARRINHO
-// ==========================================
-
-function addToCart(productId) {
-
-  const product =
-    PRODUCTS.find(item => item.id === productId);
-
-  if (!product) return;
-
-  const existing =
-    cart.find(item => item.id === productId);
-
-  if (existing) {
-
-    existing.qty += 1;
-
-  } else {
-
-    cart.push({
-      id: product.id,
-      qty: 1
-    });
-
-  }
-
-  saveCart();
-  renderCart();
-
-  openCart();
-}
-
-
-// ==========================================
-// 10. ALTERAR QUANTIDADE
-// ==========================================
-
-function changeQty(productId, amount) {
-
-  const item =
-    cart.find(item => item.id === productId);
-
-  if (!item) return;
-
-  item.qty += amount;
-
-  if (item.qty <= 0) {
-
-    cart =
-      cart.filter(item => item.id !== productId);
-
-  }
-
-  saveCart();
-  renderCart();
-}
-
-
-// ==========================================
-// 11. SALVAR CARRINHO
-// ==========================================
-
-function saveCart() {
-
-  localStorage.setItem(
-    "natyDoceCart",
-    JSON.stringify(cart)
-  );
-
-}
-
-
-// ==========================================
-// 12. RENDERIZAR CARRINHO
-// ==========================================
-
-function renderCart() {
-
-  if (!cartItemsElement) return;
-
-  if (cart.length === 0) {
-
-    cartItemsElement.innerHTML = `
-      <div class="empty-cart">
-        <div class="empty-icon">🍰</div>
-
-        <h3>
-          Seu carrinho está vazio
-        </h3>
-
-        <p>
-          Escolha um sabor delicioso para começar.
-        </p>
-      </div>
-    `;
-
-  } else {
-
-    cartItemsElement.innerHTML =
-      cart.map(item => {
-
-        const product =
-          PRODUCTS.find(p => p.id === item.id);
-
-        if (!product) return "";
-
-        const subtotal =
-          product.price * item.qty;
-
-        return `
-          <div class="cart-item">
-
-            <div class="cart-item-image">
-              ${product.emoji}
-            </div>
-
-            <div class="cart-item-info">
-
-              <strong>
-                ${escapeHTML(product.name)}
-              </strong>
-
-              <span>
-                ${formatMoney(product.price)}
-              </span>
-
-              <div class="qty">
-
-                <button
-                  onclick="changeQty(${product.id}, -1)"
-                >
-                  −
-                </button>
-
-                <b>
-                  ${item.qty}
-                </b>
-
-                <button
-                  onclick="changeQty(${product.id}, 1)"
-                >
-                  +
-                </button>
+                <small>
+                  BOLO DE POTE
+                </small>
 
               </div>
 
             </div>
 
-            <strong>
-              ${formatMoney(subtotal)}
-            </strong>
+          </div>
+
+
+          <div class="product-body">
+
+            <h3>
+              ${escapeHTML(product.name)}
+            </h3>
+
+            <p>
+              ${escapeHTML(product.description)}
+            </p>
+
+
+            <div class="product-footer">
+
+              <strong class="price">
+                ${formatMoney(product.price)}
+              </strong>
+
+
+              <a
+                class="btn small primary"
+                href="${whatsappLink(
+                  `Olá! 🍰 Quero pedir o bolo de pote "${product.name}" da Naty Doce.`
+                )}"
+                target="_blank"
+                rel="noopener"
+              >
+                Pedir
+              </a>
+
+            </div>
 
           </div>
-        `;
 
-      }).join("");
+        </article>
 
-  }
+      `;
 
-
-  const total =
-    getCartTotal();
-
-  const count =
-    getCartCount();
-
-  if (cartTotalElement) {
-
-    cartTotalElement.textContent =
-      formatMoney(total);
-
-  }
-
-  if (cartCountElement) {
-
-    cartCountElement.textContent =
-      count;
-
-  }
+    }).join("");
 
 }
 
 
-// ==========================================
-// 13. TOTAL DO CARRINHO
-// ==========================================
+// ======================================================
+// 11. BOTÕES WHATSAPP
+// ======================================================
 
-function getCartTotal() {
-
-  return cart.reduce((total, item) => {
-
-    const product =
-      PRODUCTS.find(p => p.id === item.id);
-
-    if (!product) return total;
-
-    return total + (product.price * item.qty);
-
-  }, 0);
-
-}
-
-
-// ==========================================
-// 14. QUANTIDADE DE PRODUTOS
-// ==========================================
-
-function getCartCount() {
-
-  return cart.reduce(
-    (total, item) => total + item.qty,
-    0
-  );
-
-}
-
-
-// ==========================================
-// 15. ABRIR CARRINHO
-// ==========================================
-
-function openCart() {
-
-  if (!cartElement || !overlay) return;
-
-  cartElement.classList.add("open");
-
-  overlay.classList.add("show");
-
-  document.body.classList.add("cart-open");
-
-}
-
-
-// ==========================================
-// 16. FECHAR CARRINHO
-// ==========================================
-
-function closeCart() {
-
-  if (!cartElement || !overlay) return;
-
-  cartElement.classList.remove("open");
-
-  overlay.classList.remove("show");
-
-  document.body.classList.remove("cart-open");
-
-}
-
-
-// ==========================================
-// 17. CHECKOUT PELO WHATSAPP
-// ==========================================
-
-function checkout() {
-
-  if (cart.length === 0) {
-
-    alert("Seu carrinho está vazio.");
-
-    return;
-
-  }
-
-
-  let message =
-    "🍰 *PEDIDO — NATY DOCE*%0A%0A";
-
-
-  cart.forEach(item => {
-
-    const product =
-      PRODUCTS.find(p => p.id === item.id);
-
-    if (!product) return;
-
-    const subtotal =
-      product.price * item.qty;
-
-    message +=
-      `🍰 ${item.qty}x ${product.name} — ${formatMoney(subtotal)}%0A`;
-
-  });
-
-
-  const total =
-    getCartTotal();
-
-
-  message +=
-    `%0A💰 *Total: ${formatMoney(total)}*`;
-
-  message +=
-    "%0A%0A📍 Gostaria de combinar a entrega/retirada.";
-
-
-  const url =
-    `https://wa.me/${WHATSAPP}?text=${message}`;
-
-
-  window.open(
-    url,
-    "_blank",
-    "noopener"
-  );
-
-}
-
-
-// ==========================================
-// 18. WHATSAPP DO HERO
-// ==========================================
-
-function setupWhatsAppButtons() {
+function setupWhatsApp() {
 
   const heroMessage =
     "Olá! 😍 Vim pelo site da Naty Doce e gostaria de fazer um pedido.";
 
+
   const ctaMessage =
-    "Olá! 🍰 Quero conhecer os sabores e fazer um pedido na Naty Doce.";
+    "Olá! 🍰 Quero conhecer os sabores da Naty Doce e fazer um pedido.";
 
 
   if (heroWhatsApp) {
 
     heroWhatsApp.href =
-      createWhatsAppLink(heroMessage);
+      whatsappLink(heroMessage);
 
   }
 
@@ -619,27 +478,29 @@ function setupWhatsAppButtons() {
   if (ctaWhatsApp) {
 
     ctaWhatsApp.href =
-      createWhatsAppLink(ctaMessage);
+      whatsappLink(ctaMessage);
 
   }
 
 }
 
 
-// ==========================================
-// 19. VÍDEO
-// ==========================================
+// ======================================================
+// 12. YOUTUBE — PEGAR ID
+// ======================================================
 
 function getYouTubeId(url) {
 
   if (!url) return null;
+
 
   try {
 
     const parsed =
       new URL(url);
 
-    // youtube.com/watch?v=XXXX
+
+    // youtube.com/watch?v=
     if (
       parsed.hostname.includes("youtube.com") &&
       parsed.searchParams.get("v")
@@ -649,7 +510,8 @@ function getYouTubeId(url) {
 
     }
 
-    // youtu.be/XXXX
+
+    // youtu.be/
     if (
       parsed.hostname.includes("youtu.be")
     ) {
@@ -660,13 +522,26 @@ function getYouTubeId(url) {
 
     }
 
-    // youtube.com/shorts/XXXX
+
+    // youtube.com/shorts/
     if (
       parsed.pathname.includes("/shorts/")
     ) {
 
       return parsed.pathname
         .split("/shorts/")[1]
+        .split("/")[0];
+
+    }
+
+
+    // youtube.com/embed/
+    if (
+      parsed.pathname.includes("/embed/")
+    ) {
+
+      return parsed.pathname
+        .split("/embed/")[1]
         .split("/")[0];
 
     }
@@ -679,16 +554,19 @@ function getYouTubeId(url) {
 
   }
 
+
   return null;
+
 }
 
 
+// ======================================================
+// 13. VÍDEO
+// ======================================================
+
 function renderVideo() {
 
-  const container =
-    document.getElementById("advertisementVideo");
-
-  if (!container) return;
+  if (!videoContainer) return;
 
 
   if (
@@ -697,7 +575,8 @@ function renderVideo() {
     VIDEO_CONFIG.url.includes("SEU_VIDEO_AQUI")
   ) {
 
-    container.innerHTML = `
+    videoContainer.innerHTML = `
+
       <div class="video-placeholder">
 
         <div class="video-play">
@@ -709,29 +588,33 @@ function renderVideo() {
         </h3>
 
         <p>
-          Cole o link do seu vídeo no arquivo script.js.
+          O vídeo promocional aparecerá aqui.
         </p>
 
       </div>
+
     `;
 
     return;
-
   }
 
 
-  // ========================================
+  // ====================================================
   // YOUTUBE
-  // ========================================
+  // ====================================================
 
   if (VIDEO_CONFIG.type === "youtube") {
 
     const videoId =
-      getYouTubeId(VIDEO_CONFIG.url);
+      getYouTubeId(
+        VIDEO_CONFIG.url
+      );
+
 
     if (!videoId) {
 
-      container.innerHTML = `
+      videoContainer.innerHTML = `
+
         <div class="video-placeholder">
 
           <div class="video-play">
@@ -747,6 +630,7 @@ function renderVideo() {
           </p>
 
         </div>
+
       `;
 
       return;
@@ -754,52 +638,63 @@ function renderVideo() {
     }
 
 
-    container.innerHTML = `
+    videoContainer.innerHTML = `
+
       <iframe
+
         src="https://www.youtube.com/embed/${encodeURIComponent(videoId)}"
+
         title="${escapeHTML(VIDEO_CONFIG.title)}"
+
         loading="lazy"
+
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+
         allowfullscreen>
+
       </iframe>
+
     `;
 
     return;
-
   }
 
 
-  // ========================================
+  // ====================================================
   // MP4
-  // ========================================
+  // ====================================================
 
   if (VIDEO_CONFIG.type === "mp4") {
 
-    container.innerHTML = `
+    videoContainer.innerHTML = `
+
       <video
         controls
         playsinline
         preload="metadata"
       >
+
         <source
           src="${escapeHTML(VIDEO_CONFIG.url)}"
           type="video/mp4"
         >
 
         Seu navegador não suporta vídeo.
+
       </video>
+
     `;
 
     return;
-
   }
 
 
-  // ========================================
+  // ====================================================
   // ERRO
-  // ========================================
+  // ====================================================
 
-  container.innerHTML = `
+  videoContainer.innerHTML = `
+
     <div class="video-placeholder">
 
       <div class="video-play">
@@ -807,89 +702,247 @@ function renderVideo() {
       </div>
 
       <h3>
-        Configuração de vídeo inválida
+        Configuração inválida
       </h3>
 
       <p>
-        Use type: "youtube" ou type: "mp4".
+        Use "youtube" ou "mp4".
       </p>
 
     </div>
+
   `;
 
 }
 
 
-// ==========================================
-// 20. AVALIAÇÕES
-// ==========================================
+// ======================================================
+// 14. ESTRELAS
+// ======================================================
 
-function saveReviews() {
+function renderStars(number) {
 
-  localStorage.setItem(
-    "natyDoceReviews",
-    JSON.stringify(reviews)
+  const stars =
+    Math.max(
+      0,
+      Math.min(
+        5,
+        Number(number)
+      )
+    );
+
+
+  return (
+    "★".repeat(stars) +
+    "☆".repeat(5 - stars)
   );
 
 }
 
 
-function renderReviews() {
+// ======================================================
+// 15. CARREGAR AVALIAÇÕES
+// ======================================================
+
+async function loadReviews() {
 
   if (!reviewsContainer) return;
 
 
-  if (reviews.length === 0) {
+  // ----------------------------------------------------
+  // Se o Supabase ainda não estiver configurado
+  // ----------------------------------------------------
+
+  if (!supabaseClient) {
+
+    renderDemoReviews();
+
+    return;
+  }
+
+
+  try {
+
+    const {
+      data,
+      error
+    } = await supabaseClient
+
+      .from("avaliacoes")
+
+      .select(
+        "id,nome,estrelas,comentario,aprovado,criado_em"
+      )
+
+      .eq("aprovado", true)
+
+      .order(
+        "criado_em",
+        {
+          ascending: false
+        }
+      );
+
+
+    if (error) {
+
+      console.error(
+        "Erro ao carregar avaliações:",
+        error
+      );
+
+      renderDemoReviews();
+
+      return;
+    }
+
+
+    renderReviews(data || []);
+
+    updateRatingSummary(data || []);
+
+  } catch (error) {
+
+    console.error(
+      "Erro inesperado nas avaliações:",
+      error
+    );
+
+    renderDemoReviews();
+
+  }
+
+}
+
+
+// ======================================================
+// 16. AVALIAÇÕES DE DEMONSTRAÇÃO
+// ======================================================
+
+function renderDemoReviews() {
+
+  const demoReviews = [
+
+    {
+      nome: "Mariana",
+      estrelas: 5,
+      comentario:
+        "Muito gostoso e bem recheado. Amei!"
+    },
+
+    {
+      nome: "Juliana",
+      estrelas: 5,
+      comentario:
+        "Chegou tudo certinho e estava uma delícia."
+    },
+
+    {
+      nome: "Camila",
+      estrelas: 5,
+      comentario:
+        "Muito caprichado. Com certeza vou pedir novamente."
+    }
+
+  ];
+
+
+  renderReviews(demoReviews);
+
+  updateRatingSummary(demoReviews);
+
+}
+
+
+// ======================================================
+// 17. RENDERIZAR AVALIAÇÕES
+// ======================================================
+
+function renderReviews(data) {
+
+  if (!reviewsContainer) return;
+
+
+  if (!data || data.length === 0) {
 
     reviewsContainer.innerHTML = `
+
       <div class="empty-reviews">
-        Ainda não existem avaliações.
+
+        <div>
+          ⭐
+        </div>
+
+        <h3>
+          Seja o primeiro a avaliar!
+        </h3>
+
+        <p>
+          Conte para outras pessoas como foi sua experiência.
+        </p>
+
       </div>
+
     `;
 
     return;
-
   }
 
 
   reviewsContainer.innerHTML =
-    reviews.map(review => {
+
+    data.map(review => {
+
+      const name =
+        review.nome || "Cliente";
+
+
+      const comment =
+        review.comentario || "";
+
 
       const stars =
-        "★".repeat(review.stars) +
-        "☆".repeat(5 - review.stars);
+        Number(review.estrelas) || 5;
+
+
+      const initial =
+        name
+          .charAt(0)
+          .toUpperCase();
 
 
       return `
+
         <article class="review">
 
           <div class="review-top">
 
             <div class="review-avatar">
-              ${escapeHTML(
-                review.name.charAt(0).toUpperCase()
-              )}
+              ${escapeHTML(initial)}
             </div>
+
 
             <div>
 
               <strong>
-                ${escapeHTML(review.name)}
+                ${escapeHTML(name)}
               </strong>
 
               <div class="stars">
-                ${stars}
+                ${renderStars(stars)}
               </div>
 
             </div>
 
           </div>
 
+
           <p>
-            "${escapeHTML(review.text)}"
+            "${escapeHTML(comment)}"
           </p>
 
         </article>
+
       `;
 
     }).join("");
@@ -897,175 +950,336 @@ function renderReviews() {
 }
 
 
-// ==========================================
-// 21. ABRIR MODAL DE AVALIAÇÃO
-// ==========================================
+// ======================================================
+// 18. MÉDIA DAS AVALIAÇÕES
+// ======================================================
+
+function updateRatingSummary(data) {
+
+  if (!data || data.length === 0) return;
+
+
+  const total =
+    data.reduce(
+      (sum, review) =>
+        sum + Number(review.estrelas || 0),
+      0
+    );
+
+
+  const average =
+    total / data.length;
+
+
+  // Elementos opcionais.
+  // Se forem adicionados posteriormente no HTML,
+  // serão preenchidos automaticamente.
+
+  const averageElement =
+    document.getElementById(
+      "averageRating"
+    );
+
+
+  const countElement =
+    document.getElementById(
+      "reviewCount"
+    );
+
+
+  const starsElement =
+    document.getElementById(
+      "averageStars"
+    );
+
+
+  if (averageElement) {
+
+    averageElement.textContent =
+      average.toFixed(1);
+
+  }
+
+
+  if (countElement) {
+
+    countElement.textContent =
+      `${data.length} avaliações`;
+
+  }
+
+
+  if (starsElement) {
+
+    starsElement.textContent =
+      renderStars(
+        Math.round(average)
+      );
+
+  }
+
+}
+
+
+// ======================================================
+// 19. ABRIR MODAL
+// ======================================================
 
 function openReviewModal() {
 
   if (!reviewModal) return;
 
-  reviewModal.classList.add("show");
 
-  document.body.classList.add("modal-open");
+  reviewModal.classList.add(
+    "show"
+  );
+
+
+  document.body.classList.add(
+    "modal-open"
+  );
 
 }
 
 
-// ==========================================
-// 22. FECHAR MODAL
-// ==========================================
+// ======================================================
+// 20. FECHAR MODAL
+// ======================================================
 
 function closeReviewModal() {
 
   if (!reviewModal) return;
 
-  reviewModal.classList.remove("show");
 
-  document.body.classList.remove("modal-open");
+  reviewModal.classList.remove(
+    "show"
+  );
+
+
+  document.body.classList.remove(
+    "modal-open"
+  );
 
 }
 
 
-// ==========================================
-// 23. ENVIAR AVALIAÇÃO
-// ==========================================
+// ======================================================
+// 21. ENVIAR AVALIAÇÃO
+// ======================================================
 
-function submitReview(event) {
+async function submitReview(event) {
 
   event.preventDefault();
 
 
-  const name =
-    document.getElementById("reviewName").value.trim();
-
-  const stars =
-    Number(
-      document.getElementById("reviewStars").value
+  const nameInput =
+    document.getElementById(
+      "reviewName"
     );
 
-  const text =
-    document.getElementById("reviewText").value.trim();
+
+  const starsInput =
+    document.getElementById(
+      "reviewStars"
+    );
 
 
-  if (!name || !text) {
+  const textInput =
+    document.getElementById(
+      "reviewText"
+    );
 
-    alert("Preencha seu nome e comentário.");
+
+  if (
+    !nameInput ||
+    !starsInput ||
+    !textInput
+  ) {
 
     return;
+  }
+
+
+  const name =
+    nameInput.value.trim();
+
+
+  const stars =
+    Number(starsInput.value);
+
+
+  const comment =
+    textInput.value.trim();
+
+
+  // ----------------------------------------------------
+  // Validação
+  // ----------------------------------------------------
+
+  if (
+    name.length < 2
+  ) {
+
+    alert(
+      "Digite seu nome."
+    );
+
+    nameInput.focus();
+
+    return;
+  }
+
+
+  if (
+    stars < 1 ||
+    stars > 5
+  ) {
+
+    alert(
+      "Escolha uma nota de 1 a 5 estrelas."
+    );
+
+    return;
+  }
+
+
+  if (
+    comment.length < 3
+  ) {
+
+    alert(
+      "Escreva um comentário."
+    );
+
+    textInput.focus();
+
+    return;
+  }
+
+
+  // ----------------------------------------------------
+  // Verifica Supabase
+  // ----------------------------------------------------
+
+  if (!supabaseClient) {
+
+    alert(
+      "O sistema de avaliações ainda não está conectado ao banco de dados."
+    );
+
+    return;
+  }
+
+
+  // ----------------------------------------------------
+  // Desabilita botão
+  // ----------------------------------------------------
+
+  const submitButton =
+    reviewForm.querySelector(
+      'button[type="submit"]'
+    );
+
+
+  const originalText =
+    submitButton
+      ? submitButton.textContent
+      : "";
+
+
+  if (submitButton) {
+
+    submitButton.disabled = true;
+
+    submitButton.textContent =
+      "Enviando...";
 
   }
 
 
-  const newReview = {
+  try {
 
-    id: Date.now(),
+    const {
+      error
+    } = await supabaseClient
 
-    name,
+      .from("avaliacoes")
 
-    stars,
+      .insert([
 
-    text
+        {
+          nome: name,
 
-  };
+          estrelas: stars,
 
+          comentario: comment,
 
-  reviews.unshift(newReview);
+          aprovado: false
+        }
 
-  saveReviews();
-
-  renderReviews();
-
-  reviewForm.reset();
-
-  closeReviewModal();
-
-
-  alert(
-    "Obrigado pela avaliação! ❤️"
-  );
-
-}
+      ]);
 
 
-// ==========================================
-// 24. EVENTOS DO CARRINHO
-// ==========================================
+    if (error) {
 
-if (openCartButton) {
-
-  openCartButton.addEventListener(
-    "click",
-    openCart
-  );
-
-}
+      console.error(
+        "Erro ao enviar avaliação:",
+        error
+      );
 
 
-if (closeCartButton) {
+      alert(
+        "Não foi possível enviar sua avaliação. Tente novamente."
+      );
 
-  closeCartButton.addEventListener(
-    "click",
-    closeCart
-  );
-
-}
+      return;
+    }
 
 
-if (overlay) {
+    // --------------------------------------------------
+    // Sucesso
+    // --------------------------------------------------
 
-  overlay.addEventListener(
-    "click",
-    closeCart
-  );
-
-}
-
-
-if (checkoutButton) {
-
-  checkoutButton.addEventListener(
-    "click",
-    checkout
-  );
-
-}
-
-
-// ==========================================
-// 25. EVENTOS DA AVALIAÇÃO
-// ==========================================
-
-if (reviewButton) {
-
-  reviewButton.addEventListener(
-    "click",
-    openReviewModal
-  );
-
-}
-
-
-if (reviewForm) {
-
-  reviewForm.addEventListener(
-    "submit",
-    submitReview
-  );
-
-}
-
-
-document.querySelectorAll("[data-close]")
-  .forEach(button => {
-
-    button.addEventListener(
-      "click",
-      closeReviewModal
+    alert(
+      "Obrigado pela avaliação! ❤️\n\nSua avaliação foi enviada para análise."
     );
 
-  });
 
+    reviewForm.reset();
+
+    closeReviewModal();
+
+  } catch (error) {
+
+    console.error(
+      "Erro inesperado:",
+      error
+    );
+
+
+    alert(
+      "Ocorreu um erro. Tente novamente."
+    );
+
+  } finally {
+
+    if (submitButton) {
+
+      submitButton.disabled = false;
+
+      submitButton.textContent =
+        originalText;
+
+    }
+
+  }
+
+}
+
+
+// ======================================================
+// 22. FECHAR MODAL CLICANDO FORA
+// ======================================================
 
 if (reviewModal) {
 
@@ -1073,7 +1287,9 @@ if (reviewModal) {
     "click",
     event => {
 
-      if (event.target === reviewModal) {
+      if (
+        event.target === reviewModal
+      ) {
 
         closeReviewModal();
 
@@ -1085,17 +1301,48 @@ if (reviewModal) {
 }
 
 
-// ==========================================
-// 26. ESC FECHA MODAIS
-// ==========================================
+// ======================================================
+// 23. BOTÃO DE AVALIAÇÃO
+// ======================================================
+
+if (reviewButton) {
+
+  reviewButton.addEventListener(
+    "click",
+    openReviewModal
+  );
+
+}
+
+
+// ======================================================
+// 24. BOTÃO FECHAR DO MODAL
+// ======================================================
+
+document
+  .querySelectorAll("[data-close]")
+  .forEach(button => {
+
+    button.addEventListener(
+      "click",
+      closeReviewModal
+    );
+
+  });
+
+
+// ======================================================
+// 25. ESC FECHA MODAL
+// ======================================================
 
 document.addEventListener(
   "keydown",
   event => {
 
-    if (event.key === "Escape") {
+    if (
+      event.key === "Escape"
+    ) {
 
-      closeCart();
       closeReviewModal();
 
     }
@@ -1104,9 +1351,9 @@ document.addEventListener(
 );
 
 
-// ==========================================
-// 27. ANO AUTOMÁTICO
-// ==========================================
+// ======================================================
+// 26. ANO AUTOMÁTICO
+// ======================================================
 
 if (yearElement) {
 
@@ -1116,21 +1363,46 @@ if (yearElement) {
 }
 
 
-// ==========================================
-// 28. INICIALIZAÇÃO
-// ==========================================
+// ======================================================
+// 27. INICIALIZAÇÃO
+// ======================================================
 
-renderProducts();
+async function init() {
 
-renderCart();
-
-renderReviews();
-
-renderVideo();
-
-setupWhatsAppButtons();
+  // Produtos
+  renderProducts();
 
 
-// ==========================================
-// FIM
-// ==========================================
+  // WhatsApp
+  setupWhatsApp();
+
+
+  // Vídeo
+  renderVideo();
+
+
+  // Supabase
+  try {
+
+    await loadSupabase();
+
+  } catch (error) {
+
+    console.warn(
+      "Supabase não pôde ser inicializado."
+    );
+
+  }
+
+
+  // Avaliações
+  await loadReviews();
+
+}
+
+
+// ======================================================
+// 28. INICIAR SISTEMA
+// ======================================================
+
+init();
