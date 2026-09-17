@@ -31,10 +31,10 @@ const WHATSAPP = "5500000000000";
 // NUNCA coloque a SERVICE_ROLE KEY no site.
 //
 
-const SUPABASE_URL = "COLE_AQUI_SUA_URL_SUPABASE";
+const SUPABASE_URL = "https://ggoghcojpijvvexmhmyb.supabase.co";
 
 const SUPABASE_ANON_KEY =
-  "COLE_AQUI_SUA_CHAVE_ANON_SUPABASE";
+  "sb_publishable_qBtLGs1EgAZjKLfqR0OEiQ_l0q1VECf";
 
 
 // ======================================================
