@@ -1,5 +1,5 @@
 // ======================================================
-// NATY DOCE — SCRIPT PRINCIPAL
+//  DOCE — SCRIPT PRINCIPAL
 // VERSÃO PROFISSIONAL
 // ======================================================
 
