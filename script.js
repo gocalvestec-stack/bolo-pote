@@ -1,60 +1,48 @@
 // ======================================================
 // NATY DOCE — SCRIPT PRINCIPAL
-// VERSÃO PROFISSIONAL
+// COMPATÍVEL COM O INDEX.HTML ATUAL
 // ======================================================
 
 
 // ======================================================
-// 1. CONFIGURAÇÕES GERAIS
+// 1. CONFIGURAÇÕES
 // ======================================================
 
-// WhatsApp da Naty Doce
-// Formato: 55 + DDD + número
-// Exemplo: 5531999999999
 const WHATSAPP = "5531997557546";
 
 
 // ======================================================
 // 2. SUPABASE
 // ======================================================
-//
-// Depois vamos colocar aqui os dados do seu projeto.
-//
-// URL:
-// https://xxxxxxxxxxxx.supabase.co
-//
-// ANON KEY:
-// eyJhbGciOiJIUzI1NiIs...
-//
-// IMPORTANTE:
-// Use somente a chave ANON/PUBLIC.
-// NUNCA coloque a SERVICE_ROLE KEY no site.
-//
 
-const SUPABASE_URL = "https://ggoghcojpijvvexmhmyb.supabase.co";
+const SUPABASE_URL =
+  "https://ggoghcojpijvvexmhmyb.supabase.co";
 
 const SUPABASE_ANON_KEY =
   "sb_publishable_qBtLGs1EgAZjKLfqR0OEiQ_l0q1VECf";
 
+let supabaseClient = null;
+
 
 // ======================================================
-// 3. CONFIGURAÇÃO DO VÍDEO
+// 3. VÍDEO
 // ======================================================
 
 const VIDEO_CONFIG = {
 
   enabled: true,
 
-  // youtube ou mp4
   type: "youtube",
 
-  // Cole aqui o link do vídeo
-  url: "https://www.youtube.com/watch?v=SEU_VIDEO_AQUI",
+  url:
+    "https://www.youtube.com/watch?v=SEU_VIDEO_AQUI",
 
-  title: "Conheça a Naty Doce",
+  title:
+    "Conheça a Naty Doce",
 
   description:
     "Conheça nossos bolos de pote e veja nossas delícias."
+
 };
 
 
@@ -66,96 +54,61 @@ const PRODUCTS = [
 
   {
     id: 1,
-
     name: "Brigadeiro Cremoso",
-
     description:
       "Chocolate cremoso, intenso e muito recheado.",
-
     price: 10.00,
-
     emoji: "🍫",
-
     highlight: true
   },
-
 
   {
     id: 2,
-
     name: "Ninho com Morango",
-
     description:
       "Creme de Ninho com morangos e muito recheio.",
-
     price: 12.00,
-
     emoji: "🍓",
-
     highlight: true
   },
-
 
   {
     id: 3,
-
     name: "Prestígio",
-
     description:
       "Chocolate cremoso combinado com coco.",
-
     price: 10.00,
-
     emoji: "🥥",
-
     highlight: false
   },
-
 
   {
     id: 4,
-
     name: "Doce de Leite",
-
     description:
       "Doce de leite cremoso com sabor irresistível.",
-
     price: 11.00,
-
     emoji: "🍯",
-
     highlight: false
   },
 
-
   {
     id: 5,
-
     name: "Chocolate com Morango",
-
     description:
       "Chocolate cremoso com pedaços de morango.",
-
     price: 12.00,
-
     emoji: "🍫",
-
     highlight: true
   },
 
-
   {
     id: 6,
-
     name: "Ninho com Nutella",
-
     description:
       "Creme de Ninho com Nutella e muito recheio.",
-
     price: 13.00,
-
     emoji: "🤍",
-
     highlight: true
   }
 
@@ -163,7 +116,7 @@ const PRODUCTS = [
 
 
 // ======================================================
-// 5. ELEMENTOS DO HTML
+// 5. ELEMENTOS DO INDEX
 // ======================================================
 
 const productsContainer =
@@ -187,6 +140,9 @@ const heroWhatsApp =
 const ctaWhatsApp =
   document.getElementById("ctaWhatsApp");
 
+const footerWhatsApp =
+  document.getElementById("footerWhatsApp");
+
 const yearElement =
   document.getElementById("year");
 
@@ -195,109 +151,112 @@ const videoContainer =
 
 
 // ======================================================
-// 6. SUPABASE CLIENTE
+// 6. ELEMENTOS DO CARRINHO
 // ======================================================
 
-let supabaseClient = null;
+const openCartButton =
+  document.getElementById("openCart");
+
+const closeCartButton =
+  document.getElementById("closeCart");
+
+const cartElement =
+  document.getElementById("cart");
+
+const overlay =
+  document.getElementById("overlay");
+
+const cartItemsContainer =
+  document.getElementById("cartItems");
+
+const cartTotalElement =
+  document.getElementById("cartTotal");
+
+const cartCountElement =
+  document.getElementById("cartCount");
+
+const checkoutButton =
+  document.getElementById("checkout");
 
 
-// Carrega a biblioteca do Supabase automaticamente
-function loadSupabase() {
+// ======================================================
+// 7. CARRINHO
+// ======================================================
 
-  return new Promise((resolve, reject) => {
+let cart = [];
 
-    if (
-      SUPABASE_URL.startsWith("https://") &&
-      SUPABASE_ANON_KEY.length > 20 &&
-      !SUPABASE_URL.includes("COLE_AQUI") &&
-      !SUPABASE_ANON_KEY.includes("COLE_AQUI")
-    ) {
 
-      if (window.supabase) {
+// ======================================================
+// 8. LOCAL STORAGE
+// ======================================================
 
-        supabaseClient =
-          window.supabase.createClient(
-            SUPABASE_URL,
-            SUPABASE_ANON_KEY
-          );
+function saveCart() {
 
-        resolve();
+  try {
 
-        return;
-      }
+    localStorage.setItem(
+      "natyDoceCart",
+      JSON.stringify(cart)
+    );
+
+  } catch (error) {
+
+    console.warn(
+      "Não foi possível salvar o carrinho.",
+      error
+    );
+
+  }
+
+}
+
+
+function loadCart() {
+
+  try {
+
+    const saved =
+      localStorage.getItem(
+        "natyDoceCart"
+      );
+
+    if (!saved) {
+
+      cart = [];
+
+      return;
 
     }
 
+    const parsed =
+      JSON.parse(saved);
 
-    const script =
-      document.createElement("script");
+    if (Array.isArray(parsed)) {
 
-    script.src =
-      "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2";
+      cart = parsed;
 
-    script.onload = () => {
+    } else {
 
-      if (
-        SUPABASE_URL.includes("COLE_AQUI") ||
-        SUPABASE_ANON_KEY.includes("COLE_AQUI")
-      ) {
+      cart = [];
 
-        console.warn(
-          "Supabase ainda não configurado."
-        );
+    }
 
-        resolve();
+  } catch (error) {
 
-        return;
-      }
+    console.warn(
+      "Não foi possível carregar o carrinho.",
+      error
+    );
 
+    cart = [];
 
-      try {
-
-        supabaseClient =
-          window.supabase.createClient(
-            SUPABASE_URL,
-            SUPABASE_ANON_KEY
-          );
-
-        resolve();
-
-      } catch (error) {
-
-        console.error(
-          "Erro ao inicializar Supabase:",
-          error
-        );
-
-        reject(error);
-
-      }
-
-    };
-
-
-    script.onerror = () => {
-
-      console.error(
-        "Não foi possível carregar o Supabase."
-      );
-
-      reject(
-        new Error("Supabase não carregado.")
-      );
-
-    };
-
-
-    document.head.appendChild(script);
-
-  });
+  }
 
 }
 
 
 // ======================================================
-// 7. FORMATAÇÃO DE PREÇO
+// 9. FORMATAÇÃO DE PREÇO
 // ======================================================
 
 function formatMoney(value) {
@@ -314,7 +273,7 @@ function formatMoney(value) {
 
 
 // ======================================================
-// 8. PROTEÇÃO HTML
+// 10. PROTEÇÃO HTML
 // ======================================================
 
 function escapeHTML(text) {
@@ -335,7 +294,7 @@ function escapeHTML(text) {
 
 
 // ======================================================
-// 9. LINK DO WHATSAPP
+// 11. WHATSAPP
 // ======================================================
 
 function whatsappLink(message) {
@@ -351,13 +310,51 @@ function whatsappLink(message) {
 
 
 // ======================================================
-// 10. PRODUTOS
+// 12. CONFIGURAR WHATSAPP
+// ======================================================
+
+function setupWhatsApp() {
+
+  const heroMessage =
+    "Olá! 😍 Vim pelo site da Naty Doce e gostaria de fazer um pedido.";
+
+  const ctaMessage =
+    "Olá! 🍰 Quero conhecer os sabores da Naty Doce e fazer um pedido.";
+
+  const footerMessage =
+    "Olá! 🍰 Vim pelo site da Naty Doce e gostaria de fazer um pedido.";
+
+  if (heroWhatsApp) {
+
+    heroWhatsApp.href =
+      whatsappLink(heroMessage);
+
+  }
+
+  if (ctaWhatsApp) {
+
+    ctaWhatsApp.href =
+      whatsappLink(ctaMessage);
+
+  }
+
+  if (footerWhatsApp) {
+
+    footerWhatsApp.href =
+      whatsappLink(footerMessage);
+
+  }
+
+}
+
+
+// ======================================================
+// 13. RENDERIZAR PRODUTOS
 // ======================================================
 
 function renderProducts() {
 
   if (!productsContainer) return;
-
 
   productsContainer.innerHTML =
     PRODUCTS.map(product => {
@@ -367,10 +364,12 @@ function renderProducts() {
           ? `<span class="product-badge">Mais pedido</span>`
           : "";
 
-
       return `
 
-        <article class="product">
+        <article
+          class="product"
+          data-product-id="${product.id}"
+        >
 
           <div class="product-img">
 
@@ -410,7 +409,6 @@ function renderProducts() {
 
           </div>
 
-
           <div class="product-body">
 
             <h3>
@@ -421,24 +419,19 @@ function renderProducts() {
               ${escapeHTML(product.description)}
             </p>
 
-
             <div class="product-footer">
 
               <strong class="price">
                 ${formatMoney(product.price)}
               </strong>
 
-
-              <a
-                class="btn small primary"
-                href="${whatsappLink(
-                  `Olá! 🍰 Quero pedir o bolo de pote "${product.name}" da Naty Doce.`
-                )}"
-                target="_blank"
-                rel="noopener"
+              <button
+                class="btn small primary add-product"
+                type="button"
+                data-product-id="${product.id}"
               >
                 Pedir
-              </a>
+              </button>
 
             </div>
 
@@ -450,43 +443,583 @@ function renderProducts() {
 
     }).join("");
 
-}
 
+  document
+    .querySelectorAll(".add-product")
+    .forEach(button => {
 
-// ======================================================
-// 11. BOTÕES WHATSAPP
-// ======================================================
+      button.addEventListener(
+        "click",
+        () => {
 
-function setupWhatsApp() {
+          const productId =
+            Number(
+              button.dataset.productId
+            );
 
-  const heroMessage =
-    "Olá! 😍 Vim pelo site da Naty Doce e gostaria de fazer um pedido.";
+          addToCart(productId);
 
+        }
+      );
 
-  const ctaMessage =
-    "Olá! 🍰 Quero conhecer os sabores da Naty Doce e fazer um pedido.";
-
-
-  if (heroWhatsApp) {
-
-    heroWhatsApp.href =
-      whatsappLink(heroMessage);
-
-  }
-
-
-  if (ctaWhatsApp) {
-
-    ctaWhatsApp.href =
-      whatsappLink(ctaMessage);
-
-  }
+    });
 
 }
 
 
 // ======================================================
-// 12. YOUTUBE — PEGAR ID
+// 14. ADICIONAR AO CARRINHO
+// ======================================================
+
+function addToCart(productId) {
+
+  const product =
+    PRODUCTS.find(
+      item =>
+        item.id === productId
+    );
+
+  if (!product) return;
+
+
+  const existing =
+    cart.find(
+      item =>
+        item.id === productId
+    );
+
+
+  if (existing) {
+
+    existing.quantity += 1;
+
+  } else {
+
+    cart.push({
+
+      id: product.id,
+
+      name: product.name,
+
+      price: product.price,
+
+      emoji: product.emoji,
+
+      quantity: 1
+
+    });
+
+  }
+
+
+  saveCart();
+
+  renderCart();
+
+  openCart();
+
+}
+
+
+// ======================================================
+// 15. ALTERAR QUANTIDADE
+// ======================================================
+
+function changeQuantity(
+  productId,
+  change
+) {
+
+  const item =
+    cart.find(
+      product =>
+        product.id === productId
+    );
+
+  if (!item) return;
+
+
+  item.quantity += change;
+
+
+  if (item.quantity <= 0) {
+
+    cart =
+      cart.filter(
+        product =>
+          product.id !== productId
+      );
+
+  }
+
+
+  saveCart();
+
+  renderCart();
+
+}
+
+
+// ======================================================
+// 16. REMOVER PRODUTO
+// ======================================================
+
+function removeFromCart(productId) {
+
+  cart =
+    cart.filter(
+      item =>
+        item.id !== productId
+    );
+
+
+  saveCart();
+
+  renderCart();
+
+}
+
+
+// ======================================================
+// 17. TOTAL DO CARRINHO
+// ======================================================
+
+function getCartTotal() {
+
+  return cart.reduce(
+
+    (total, item) => {
+
+      return (
+        total +
+        item.price *
+        item.quantity
+      );
+
+    },
+
+    0
+
+  );
+
+}
+
+
+// ======================================================
+// 18. QUANTIDADE TOTAL
+// ======================================================
+
+function getCartCount() {
+
+  return cart.reduce(
+
+    (total, item) => {
+
+      return (
+        total +
+        item.quantity
+      );
+
+    },
+
+    0
+
+  );
+
+}
+
+
+// ======================================================
+// 19. RENDERIZAR CARRINHO
+// ======================================================
+
+function renderCart() {
+
+  if (
+    !cartItemsContainer ||
+    !cartTotalElement
+  ) return;
+
+
+  const count =
+    getCartCount();
+
+
+  if (cartCountElement) {
+
+    cartCountElement.textContent =
+      count;
+
+  }
+
+
+  const total =
+    getCartTotal();
+
+
+  cartTotalElement.textContent =
+    formatMoney(total);
+
+
+  if (cart.length === 0) {
+
+    cartItemsContainer.innerHTML = `
+
+      <div class="empty-cart">
+
+        <div>
+          🍰
+        </div>
+
+        <h3>
+          Seu carrinho está vazio
+        </h3>
+
+        <p>
+          Escolha um sabor delicioso para começar.
+        </p>
+
+      </div>
+
+    `;
+
+    if (checkoutButton) {
+
+      checkoutButton.disabled = true;
+
+    }
+
+    return;
+
+  }
+
+
+  if (checkoutButton) {
+
+    checkoutButton.disabled = false;
+
+  }
+
+
+  cartItemsContainer.innerHTML =
+
+    cart.map(item => {
+
+      const subtotal =
+        item.price *
+        item.quantity;
+
+
+      return `
+
+        <div
+          class="cart-item"
+          data-cart-id="${item.id}"
+        >
+
+          <div class="cart-item-info">
+
+            <div class="cart-item-emoji">
+              ${item.emoji || "🍰"}
+            </div>
+
+            <div>
+
+              <strong>
+                ${escapeHTML(item.name)}
+              </strong>
+
+              <small>
+                ${formatMoney(item.price)}
+              </small>
+
+            </div>
+
+          </div>
+
+
+          <div class="cart-item-bottom">
+
+            <div class="quantity">
+
+              <button
+                type="button"
+                class="quantity-minus"
+                data-id="${item.id}"
+              >
+                −
+              </button>
+
+              <strong>
+                ${item.quantity}
+              </strong>
+
+              <button
+                type="button"
+                class="quantity-plus"
+                data-id="${item.id}"
+              >
+                +
+              </button>
+
+            </div>
+
+
+            <strong>
+              ${formatMoney(subtotal)}
+            </strong>
+
+
+            <button
+              type="button"
+              class="remove-cart-item"
+              data-id="${item.id}"
+              aria-label="Remover produto"
+            >
+              🗑️
+            </button>
+
+          </div>
+
+        </div>
+
+      `;
+
+    }).join("");
+
+
+  cartItemsContainer
+    .querySelectorAll(".quantity-minus")
+    .forEach(button => {
+
+      button.addEventListener(
+        "click",
+        () => {
+
+          changeQuantity(
+            Number(button.dataset.id),
+            -1
+          );
+
+        }
+      );
+
+    });
+
+
+  cartItemsContainer
+    .querySelectorAll(".quantity-plus")
+    .forEach(button => {
+
+      button.addEventListener(
+        "click",
+        () => {
+
+          changeQuantity(
+            Number(button.dataset.id),
+            1
+          );
+
+        }
+      );
+
+    });
+
+
+  cartItemsContainer
+    .querySelectorAll(".remove-cart-item")
+    .forEach(button => {
+
+      button.addEventListener(
+        "click",
+        () => {
+
+          removeFromCart(
+            Number(button.dataset.id)
+          );
+
+        }
+      );
+
+    });
+
+}
+
+
+// ======================================================
+// 20. ABRIR CARRINHO
+// ======================================================
+
+function openCart() {
+
+  if (cartElement) {
+
+    cartElement.classList.add("show");
+
+  }
+
+
+  if (overlay) {
+
+    overlay.classList.add("show");
+
+  }
+
+
+  document.body.classList.add(
+    "cart-open"
+  );
+
+}
+
+
+// ======================================================
+// 21. FECHAR CARRINHO
+// ======================================================
+
+function closeCart() {
+
+  if (cartElement) {
+
+    cartElement.classList.remove("show");
+
+  }
+
+
+  if (overlay) {
+
+    overlay.classList.remove("show");
+
+  }
+
+
+  document.body.classList.remove(
+    "cart-open"
+  );
+
+}
+
+
+// ======================================================
+// 22. CONFIGURAR CARRINHO
+// ======================================================
+
+function setupCart() {
+
+  if (openCartButton) {
+
+    openCartButton.addEventListener(
+      "click",
+      openCart
+    );
+
+  }
+
+
+  if (closeCartButton) {
+
+    closeCartButton.addEventListener(
+      "click",
+      closeCart
+    );
+
+  }
+
+
+  if (overlay) {
+
+    overlay.addEventListener(
+      "click",
+      closeCart
+    );
+
+  }
+
+
+  if (checkoutButton) {
+
+    checkoutButton.addEventListener(
+      "click",
+      checkoutWhatsApp
+    );
+
+  }
+
+
+  document.addEventListener(
+    "keydown",
+    event => {
+
+      if (
+        event.key === "Escape"
+      ) {
+
+        closeCart();
+
+      }
+
+    }
+  );
+
+}
+
+
+// ======================================================
+// 23. FINALIZAR PEDIDO
+// ======================================================
+
+function checkoutWhatsApp() {
+
+  if (cart.length === 0) {
+
+    alert(
+      "Seu carrinho está vazio."
+    );
+
+    return;
+
+  }
+
+
+  let message =
+    "Olá! 🍰 Quero fazer um pedido na Naty Doce.%0A%0A";
+
+
+  message =
+    "Olá! 🍰 Quero fazer um pedido na Naty Doce.\n\n";
+
+
+  cart.forEach(item => {
+
+    const subtotal =
+      item.price *
+      item.quantity;
+
+
+    message +=
+      `${item.quantity}x ${item.name} — ${formatMoney(subtotal)}\n`;
+
+  });
+
+
+  message +=
+    `\nTotal: ${formatMoney(getCartTotal())}`;
+
+
+  message +=
+    "\n\nGostaria de combinar a entrega pelo WhatsApp. ❤️";
+
+
+  window.open(
+    whatsappLink(message),
+    "_blank"
+  );
+
+}
+
+
+// ======================================================
+// 24. YOUTUBE — PEGAR ID
 // ======================================================
 
 function getYouTubeId(url) {
@@ -500,9 +1033,10 @@ function getYouTubeId(url) {
       new URL(url);
 
 
-    // youtube.com/watch?v=
     if (
-      parsed.hostname.includes("youtube.com") &&
+      parsed.hostname.includes(
+        "youtube.com"
+      ) &&
       parsed.searchParams.get("v")
     ) {
 
@@ -511,9 +1045,10 @@ function getYouTubeId(url) {
     }
 
 
-    // youtu.be/
     if (
-      parsed.hostname.includes("youtu.be")
+      parsed.hostname.includes(
+        "youtu.be"
+      )
     ) {
 
       return parsed.pathname
@@ -523,9 +1058,10 @@ function getYouTubeId(url) {
     }
 
 
-    // youtube.com/shorts/
     if (
-      parsed.pathname.includes("/shorts/")
+      parsed.pathname.includes(
+        "/shorts/"
+      )
     ) {
 
       return parsed.pathname
@@ -535,9 +1071,10 @@ function getYouTubeId(url) {
     }
 
 
-    // youtube.com/embed/
     if (
-      parsed.pathname.includes("/embed/")
+      parsed.pathname.includes(
+        "/embed/"
+      )
     ) {
 
       return parsed.pathname
@@ -549,7 +1086,8 @@ function getYouTubeId(url) {
   } catch (error) {
 
     console.warn(
-      "URL de vídeo inválida."
+      "URL de vídeo inválida.",
+      error
     );
 
   }
@@ -561,7 +1099,7 @@ function getYouTubeId(url) {
 
 
 // ======================================================
-// 13. VÍDEO
+// 25. RENDERIZAR VÍDEO
 // ======================================================
 
 function renderVideo() {
@@ -572,7 +1110,9 @@ function renderVideo() {
   if (
     !VIDEO_CONFIG.enabled ||
     !VIDEO_CONFIG.url ||
-    VIDEO_CONFIG.url.includes("SEU_VIDEO_AQUI")
+    VIDEO_CONFIG.url.includes(
+      "SEU_VIDEO_AQUI"
+    )
   ) {
 
     videoContainer.innerHTML = `
@@ -584,11 +1124,15 @@ function renderVideo() {
         </div>
 
         <h3>
-          ${escapeHTML(VIDEO_CONFIG.title)}
+          ${escapeHTML(
+            VIDEO_CONFIG.title
+          )}
         </h3>
 
         <p>
-          O vídeo promocional aparecerá aqui.
+          ${escapeHTML(
+            VIDEO_CONFIG.description
+          )}
         </p>
 
       </div>
@@ -596,14 +1140,14 @@ function renderVideo() {
     `;
 
     return;
+
   }
 
 
-  // ====================================================
-  // YOUTUBE
-  // ====================================================
-
-  if (VIDEO_CONFIG.type === "youtube") {
+  if (
+    VIDEO_CONFIG.type ===
+    "youtube"
+  ) {
 
     const videoId =
       getYouTubeId(
@@ -644,11 +1188,21 @@ function renderVideo() {
 
         src="https://www.youtube.com/embed/${encodeURIComponent(videoId)}"
 
-        title="${escapeHTML(VIDEO_CONFIG.title)}"
+        title="${escapeHTML(
+          VIDEO_CONFIG.title
+        )}"
 
         loading="lazy"
 
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allow="
+          accelerometer;
+          autoplay;
+          clipboard-write;
+          encrypted-media;
+          gyroscope;
+          picture-in-picture;
+          web-share
+        "
 
         allowfullscreen>
 
@@ -657,14 +1211,14 @@ function renderVideo() {
     `;
 
     return;
+
   }
 
 
-  // ====================================================
-  // MP4
-  // ====================================================
-
-  if (VIDEO_CONFIG.type === "mp4") {
+  if (
+    VIDEO_CONFIG.type ===
+    "mp4"
+  ) {
 
     videoContainer.innerHTML = `
 
@@ -675,7 +1229,9 @@ function renderVideo() {
       >
 
         <source
-          src="${escapeHTML(VIDEO_CONFIG.url)}"
+          src="${escapeHTML(
+            VIDEO_CONFIG.url
+          )}"
           type="video/mp4"
         >
 
@@ -686,12 +1242,9 @@ function renderVideo() {
     `;
 
     return;
+
   }
 
-
-  // ====================================================
-  // ERRO
-  // ====================================================
 
   videoContainer.innerHTML = `
 
@@ -717,7 +1270,7 @@ function renderVideo() {
 
 
 // ======================================================
-// 14. ESTRELAS
+// 26. ESTRELAS
 // ======================================================
 
 function renderStars(number) {
@@ -741,7 +1294,7 @@ function renderStars(number) {
 
 
 // ======================================================
-// 15. CARREGAR AVALIAÇÕES
+// 27. CARREGAR AVALIAÇÕES
 // ======================================================
 
 async function loadReviews() {
@@ -749,15 +1302,12 @@ async function loadReviews() {
   if (!reviewsContainer) return;
 
 
-  // ----------------------------------------------------
-  // Se o Supabase ainda não estiver configurado
-  // ----------------------------------------------------
-
   if (!supabaseClient) {
 
     renderDemoReviews();
 
     return;
+
   }
 
 
@@ -774,7 +1324,10 @@ async function loadReviews() {
         "id,nome,estrelas,comentario,aprovado,criado_em"
       )
 
-      .eq("aprovado", true)
+      .eq(
+        "aprovado",
+        true
+      )
 
       .order(
         "criado_em",
@@ -794,12 +1347,17 @@ async function loadReviews() {
       renderDemoReviews();
 
       return;
+
     }
 
 
-    renderReviews(data || []);
+    renderReviews(
+      data || []
+    );
 
-    updateRatingSummary(data || []);
+    updateRatingSummary(
+      data || []
+    );
 
   } catch (error) {
 
@@ -816,7 +1374,7 @@ async function loadReviews() {
 
 
 // ======================================================
-// 16. AVALIAÇÕES DE DEMONSTRAÇÃO
+// 28. AVALIAÇÕES DEMO
 // ======================================================
 
 function renderDemoReviews() {
@@ -847,15 +1405,19 @@ function renderDemoReviews() {
   ];
 
 
-  renderReviews(demoReviews);
+  renderReviews(
+    demoReviews
+  );
 
-  updateRatingSummary(demoReviews);
+  updateRatingSummary(
+    demoReviews
+  );
 
 }
 
 
 // ======================================================
-// 17. RENDERIZAR AVALIAÇÕES
+// 29. RENDERIZAR AVALIAÇÕES
 // ======================================================
 
 function renderReviews(data) {
@@ -863,7 +1425,10 @@ function renderReviews(data) {
   if (!reviewsContainer) return;
 
 
-  if (!data || data.length === 0) {
+  if (
+    !data ||
+    data.length === 0
+  ) {
 
     reviewsContainer.innerHTML = `
 
@@ -886,6 +1451,7 @@ function renderReviews(data) {
     `;
 
     return;
+
   }
 
 
@@ -894,15 +1460,19 @@ function renderReviews(data) {
     data.map(review => {
 
       const name =
-        review.nome || "Cliente";
+        review.nome ||
+        "Cliente";
 
 
       const comment =
-        review.comentario || "";
+        review.comentario ||
+        "";
 
 
       const stars =
-        Number(review.estrelas) || 5;
+        Number(
+          review.estrelas
+        ) || 5;
 
 
       const initial =
@@ -921,7 +1491,6 @@ function renderReviews(data) {
               ${escapeHTML(initial)}
             </div>
 
-
             <div>
 
               <strong>
@@ -935,7 +1504,6 @@ function renderReviews(data) {
             </div>
 
           </div>
-
 
           <p>
             "${escapeHTML(comment)}"
@@ -951,29 +1519,35 @@ function renderReviews(data) {
 
 
 // ======================================================
-// 18. MÉDIA DAS AVALIAÇÕES
+// 30. RESUMO DAS AVALIAÇÕES
 // ======================================================
 
 function updateRatingSummary(data) {
 
-  if (!data || data.length === 0) return;
+  if (
+    !data ||
+    data.length === 0
+  ) return;
 
 
   const total =
     data.reduce(
-      (sum, review) =>
-        sum + Number(review.estrelas || 0),
+      (
+        sum,
+        review
+      ) =>
+        sum +
+        Number(
+          review.estrelas || 0
+        ),
       0
     );
 
 
   const average =
-    total / data.length;
+    total /
+    data.length;
 
-
-  // Elementos opcionais.
-  // Se forem adicionados posteriormente no HTML,
-  // serão preenchidos automaticamente.
 
   const averageElement =
     document.getElementById(
@@ -1022,7 +1596,7 @@ function updateRatingSummary(data) {
 
 
 // ======================================================
-// 19. ABRIR MODAL
+// 31. ABRIR MODAL DE AVALIAÇÃO
 // ======================================================
 
 function openReviewModal() {
@@ -1043,7 +1617,7 @@ function openReviewModal() {
 
 
 // ======================================================
-// 20. FECHAR MODAL
+// 32. FECHAR MODAL DE AVALIAÇÃO
 // ======================================================
 
 function closeReviewModal() {
@@ -1064,7 +1638,7 @@ function closeReviewModal() {
 
 
 // ======================================================
-// 21. ENVIAR AVALIAÇÃO
+// 33. ENVIAR AVALIAÇÃO
 // ======================================================
 
 async function submitReview(event) {
@@ -1097,6 +1671,7 @@ async function submitReview(event) {
   ) {
 
     return;
+
   }
 
 
@@ -1105,16 +1680,14 @@ async function submitReview(event) {
 
 
   const stars =
-    Number(starsInput.value);
+    Number(
+      starsInput.value
+    );
 
 
   const comment =
     textInput.value.trim();
 
-
-  // ----------------------------------------------------
-  // Validação
-  // ----------------------------------------------------
 
   if (
     name.length < 2
@@ -1127,6 +1700,7 @@ async function submitReview(event) {
     nameInput.focus();
 
     return;
+
   }
 
 
@@ -1140,6 +1714,7 @@ async function submitReview(event) {
     );
 
     return;
+
   }
 
 
@@ -1154,12 +1729,9 @@ async function submitReview(event) {
     textInput.focus();
 
     return;
+
   }
 
-
-  // ----------------------------------------------------
-  // Verifica Supabase
-  // ----------------------------------------------------
 
   if (!supabaseClient) {
 
@@ -1168,12 +1740,9 @@ async function submitReview(event) {
     );
 
     return;
+
   }
 
-
-  // ----------------------------------------------------
-  // Desabilita botão
-  // ----------------------------------------------------
 
   const submitButton =
     reviewForm.querySelector(
@@ -1189,7 +1758,8 @@ async function submitReview(event) {
 
   if (submitButton) {
 
-    submitButton.disabled = true;
+    submitButton.disabled =
+      true;
 
     submitButton.textContent =
       "Enviando...";
@@ -1227,18 +1797,14 @@ async function submitReview(event) {
         error
       );
 
-
       alert(
         "Não foi possível enviar sua avaliação. Tente novamente."
       );
 
       return;
+
     }
 
-
-    // --------------------------------------------------
-    // Sucesso
-    // --------------------------------------------------
 
     alert(
       "Obrigado pela avaliação! ❤️\n\nSua avaliação foi enviada para análise."
@@ -1256,7 +1822,6 @@ async function submitReview(event) {
       error
     );
 
-
     alert(
       "Ocorreu um erro. Tente novamente."
     );
@@ -1265,7 +1830,8 @@ async function submitReview(event) {
 
     if (submitButton) {
 
-      submitButton.disabled = false;
+      submitButton.disabled =
+        false;
 
       submitButton.textContent =
         originalText;
@@ -1278,17 +1844,73 @@ async function submitReview(event) {
 
 
 // ======================================================
-// 22. FECHAR MODAL CLICANDO FORA
+// 34. CONFIGURAR MODAL
 // ======================================================
 
-if (reviewModal) {
+function setupReviewModal() {
 
-  reviewModal.addEventListener(
-    "click",
+  if (reviewButton) {
+
+    reviewButton.addEventListener(
+      "click",
+      openReviewModal
+    );
+
+  }
+
+
+  if (reviewForm) {
+
+    reviewForm.addEventListener(
+      "submit",
+      submitReview
+    );
+
+  }
+
+
+  document
+    .querySelectorAll(
+      "[data-close]"
+    )
+    .forEach(button => {
+
+      button.addEventListener(
+        "click",
+        closeReviewModal
+      );
+
+    });
+
+
+  if (reviewModal) {
+
+    reviewModal.addEventListener(
+      "click",
+      event => {
+
+        if (
+          event.target ===
+          reviewModal
+        ) {
+
+          closeReviewModal();
+
+        }
+
+      }
+    );
+
+  }
+
+
+  document.addEventListener(
+    "keydown",
     event => {
 
       if (
-        event.target === reviewModal
+        event.key ===
+        "Escape"
       ) {
 
         closeReviewModal();
@@ -1302,69 +1924,132 @@ if (reviewModal) {
 
 
 // ======================================================
-// 23. BOTÃO DE AVALIAÇÃO
+// 35. ANO
 // ======================================================
 
-if (reviewButton) {
+function setupYear() {
 
-  reviewButton.addEventListener(
-    "click",
-    openReviewModal
+  if (yearElement) {
+
+    yearElement.textContent =
+      new Date().getFullYear();
+
+  }
+
+}
+
+
+// ======================================================
+// 36. CARREGAR SUPABASE
+// ======================================================
+
+function loadSupabase() {
+
+  return new Promise(
+    (resolve, reject) => {
+
+      if (
+        window.supabase
+      ) {
+
+        try {
+
+          supabaseClient =
+            window.supabase.createClient(
+              SUPABASE_URL,
+              SUPABASE_ANON_KEY
+            );
+
+          resolve();
+
+          return;
+
+        } catch (error) {
+
+          reject(error);
+
+          return;
+
+        }
+
+      }
+
+
+      const script =
+        document.createElement(
+          "script"
+        );
+
+
+      script.src =
+        "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2";
+
+
+      script.onload = () => {
+
+        try {
+
+          if (
+            !window.supabase
+          ) {
+
+            reject(
+              new Error(
+                "Biblioteca Supabase não encontrada."
+              )
+            );
+
+            return;
+
+          }
+
+
+          supabaseClient =
+            window.supabase.createClient(
+              SUPABASE_URL,
+              SUPABASE_ANON_KEY
+            );
+
+
+          resolve();
+
+        } catch (error) {
+
+          console.error(
+            "Erro ao inicializar Supabase:",
+            error
+          );
+
+          reject(error);
+
+        }
+
+      };
+
+
+      script.onerror = () => {
+
+        reject(
+          new Error(
+            "Não foi possível carregar o Supabase."
+          )
+        );
+
+      };
+
+
+      document.head.appendChild(
+        script
+      );
+
+    }
   );
 
 }
 
 
 // ======================================================
-// 24. BOTÃO FECHAR DO MODAL
-// ======================================================
-
-document
-  .querySelectorAll("[data-close]")
-  .forEach(button => {
-
-    button.addEventListener(
-      "click",
-      closeReviewModal
-    );
-
-  });
-
-
-// ======================================================
-// 25. ESC FECHA MODAL
-// ======================================================
-
-document.addEventListener(
-  "keydown",
-  event => {
-
-    if (
-      event.key === "Escape"
-    ) {
-
-      closeReviewModal();
-
-    }
-
-  }
-);
-
-
-// ======================================================
-// 26. ANO AUTOMÁTICO
-// ======================================================
-
-if (yearElement) {
-
-  yearElement.textContent =
-    new Date().getFullYear();
-
-}
-
-
-// ======================================================
-// 27. INICIALIZAÇÃO
+// 37. INICIALIZAÇÃO
 // ======================================================
 
 async function init() {
@@ -1377,8 +2062,24 @@ async function init() {
   setupWhatsApp();
 
 
+  // Ano
+  setupYear();
+
+
   // Vídeo
   renderVideo();
+
+
+  // Carrinho
+  loadCart();
+
+  renderCart();
+
+  setupCart();
+
+
+  // Modal de avaliações
+  setupReviewModal();
 
 
   // Supabase
@@ -1389,7 +2090,8 @@ async function init() {
   } catch (error) {
 
     console.warn(
-      "Supabase não pôde ser inicializado."
+      "Supabase não pôde ser inicializado.",
+      error
     );
 
   }
@@ -1402,7 +2104,21 @@ async function init() {
 
 
 // ======================================================
-// 28. INICIAR SISTEMA
+// 38. INICIAR
 // ======================================================
 
-init();
+if (
+  document.readyState ===
+  "loading"
+) {
+
+  document.addEventListener(
+    "DOMContentLoaded",
+    init
+  );
+
+} else {
+
+  init();
+
+}
