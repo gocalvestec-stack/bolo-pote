@@ -1,5 +1,5 @@
 // ======================================================
-// RD-DOCE — SCRIPT PRINCIPAL
+// NATY DOCE — SCRIPT PRINCIPAL
 // VERSÃO PROFISSIONAL
 // ======================================================
 
@@ -11,7 +11,7 @@
 // WhatsApp da Naty Doce
 // Formato: 55 + DDD + número
 // Exemplo: 5531999999999
-const WHATSAPP = "5500000000000";
+const WHATSAPP = "5531997557546";
 
 
 // ======================================================
